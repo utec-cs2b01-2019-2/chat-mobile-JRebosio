@@ -27,13 +27,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         return  new ViewHolder(view);
     }
 
+
+    public void goToMessageActivity(int user_id, String username){
+        Intent intent = new Intent(this.context, MessageActivity.class);
+        intent.putExtra("user_from_id", userFromId);
+        intent.putExtra("user_to_id", user_id);
+        intent.putExtra("username", username);
+        this.context.startActivity(intent);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             JSONObject element = elements.getJSONObject(position);
             String name = element.getString("name")+" "+element.getString("fullname");
             final String username = element.getString("username");
-            final String id = element.getString("id");
+            final int user_id = element.getInt("id");
             holder.first_line.setText(name);
             holder.second_line.setText(username);
 
@@ -41,12 +50,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
                 @Override
                 public void onClick(View v) {
-                    Intent goToMessage = new Intent(context,MessageActivity.class);
-                    goToMessage.putExtra("user_from_id",userFromId);
-                    goToMessage.putExtra("user_to_id",id);
-                    goToMessage.putExtra("username", username);
-                    context.startActivity(goToMessage);
+
+                    goToMessageActivity(user_id, username);
+
                 }
+
             });
 
         } catch (JSONException e) {
